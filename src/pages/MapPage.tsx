@@ -9,6 +9,24 @@ declare global {
   interface Window { kakao: any }
 }
 
+function loadKakaoScript(): Promise<void> {
+  return new Promise((resolve) => {
+    if (window.kakao?.maps) { resolve(); return }
+
+    const existing = document.getElementById('kakao-map-script')
+    if (existing) {
+      existing.addEventListener('load', () => window.kakao.maps.load(resolve))
+      return
+    }
+
+    const script = document.createElement('script')
+    script.id = 'kakao-map-script'
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_KEY}&autoload=false`
+    script.onload = () => window.kakao.maps.load(resolve)
+    document.head.appendChild(script)
+  })
+}
+
 export default function MapPage() {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
@@ -26,17 +44,20 @@ export default function MapPage() {
 
   useEffect(() => {
     if (!mapRef.current || mountains.length === 0) return
-    if (!window.kakao?.maps) return
 
-    window.kakao.maps.load(() => {
+    loadKakaoScript().then(() => {
+      if (!mapRef.current) return
+
       if (!mapInstanceRef.current) {
-        mapInstanceRef.current = new window.kakao.maps.Map(mapRef.current!, {
+        mapInstanceRef.current = new window.kakao.maps.Map(mapRef.current, {
           center: new window.kakao.maps.LatLng(36.4, 127.9),
           level: 13,
         })
+        window.kakao.maps.event.addListener(mapInstanceRef.current, 'click', () => {
+          setSelectedRef.current(null)
+        })
       }
 
-      // 기존 마커 제거
       overlaysRef.current.forEach(o => o.setMap(null))
       overlaysRef.current = []
 
@@ -68,11 +89,6 @@ export default function MapPage() {
         })
         overlaysRef.current.push(overlay)
       })
-
-      // 지도 클릭 시 패널 닫기
-      window.kakao.maps.event.addListener(mapInstanceRef.current, 'click', () => {
-        setSelectedRef.current(null)
-      })
     })
   }, [mountains, completedIds])
 
@@ -81,7 +97,6 @@ export default function MapPage() {
 
   return (
     <div className="relative flex flex-col h-screen">
-      {/* 완등 현황 배지 */}
       <div className="absolute top-12 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full px-4 py-1.5 shadow-md flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-[#34c46a]" />
         <span className="text-xs font-medium text-[#1a3a5c]">완등 {completedCount}</span>
@@ -90,10 +105,8 @@ export default function MapPage() {
         <span className="text-xs font-medium text-[#1a3a5c]">미완등 {mountains.length - completedCount}</span>
       </div>
 
-      {/* 지도 */}
       <div ref={mapRef} className="flex-1" />
 
-      {/* 선택된 산 패널 */}
       {selected && (
         <div className="absolute bottom-16 left-0 right-0 px-4 z-10 max-w-[430px] mx-auto">
           <div className="bg-white rounded-2xl px-4 py-3.5 shadow-xl flex items-center gap-3">
