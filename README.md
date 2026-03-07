@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# 🏔️ PeakLog
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+한국 4대 등산 기관의 100대 명산을 기록하는 모바일 웹 서비스
 
-Currently, two official plugins are available:
+**배포 주소** : https://peak-log-rosy.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 소개
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+산림청, 블랙야크(BAC), 한국의산하, 월간산 — 4개 기관이 선정한 100대 명산 목록을 한 곳에서 관리합니다.
+총 149개 고유 산에 대해 완등 여부를 기록하고, 산행 날짜·날씨·동행인·메모·사진을 남길 수 있습니다.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 주요 기능
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| 기능 | 설명 |
+|------|------|
+| 완등 체크 | 산 완등 시 날짜 직접 입력 가능 |
+| 리스트 | 기관별 필터, 검색, 가나다순/미완등 먼저 정렬 |
+| 대시보드 | 전체 및 기관별 진행률, 최근 완등 목록 |
+| 산행 기록 | 날짜·날씨·동행인·메모·사진(최대 3장) 기록 |
+| 달력 | 월별 산행 기록 캘린더 뷰 |
+| 지도 | 카카오맵 기반 149개 산 위치 마커 |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 기술 스택
+
+- **Frontend** : React 19 + TypeScript + Vite
+- **Styling** : Tailwind CSS v4
+- **State** : Zustand
+- **Backend** : Supabase (Auth + PostgreSQL + Storage)
+- **Map** : Kakao Maps JavaScript API
+- **Deploy** : Vercel
+
+---
+
+## 데이터
+
+| 기관 | 산 수 |
+|------|------|
+| 산림청 | 100개 |
+| 블랙야크 (BAC) | 100개 |
+| 한국의산하 | 100개 |
+| 월간산 | 100개 |
+| **고유 산 합계** | **149개** |
+
+---
+
+## 로컬 실행
+
+```bash
+# 패키지 설치
+npm install
+
+# 환경변수 설정 (.env 파일 생성)
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_KAKAO_MAP_KEY=your_kakao_javascript_key
+
+# 개발 서버 실행
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Supabase 스키마
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sql
+mountains (id, name_ko, height, region, lat, lng, organizations[])
+completions (id, user_id, mountain_id, completed_at, hiked_date)
+records (id, user_id, mountain_id, hiked_date, companions, weather, memo, photo_urls[])
 ```
+
+---
+
+*개인 프로젝트 — 2인 사용 기준으로 제작*
