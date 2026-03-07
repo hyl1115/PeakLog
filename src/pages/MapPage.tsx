@@ -9,20 +9,26 @@ declare global {
   interface Window { kakao: any }
 }
 
+let kakaoReady = false
+const kakaoCallbacks: (() => void)[] = []
+
 function loadKakaoScript(): Promise<void> {
   return new Promise((resolve) => {
-    if (window.kakao?.maps) { resolve(); return }
+    if (kakaoReady) { resolve(); return }
 
-    const existing = document.getElementById('kakao-map-script')
-    if (existing) {
-      existing.addEventListener('load', () => window.kakao.maps.load(resolve))
-      return
-    }
+    kakaoCallbacks.push(resolve)
+    if (document.getElementById('kakao-map-script')) return
 
     const script = document.createElement('script')
     script.id = 'kakao-map-script'
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_KEY}&autoload=false`
-    script.onload = () => window.kakao.maps.load(resolve)
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        kakaoReady = true
+        kakaoCallbacks.forEach(cb => cb())
+        kakaoCallbacks.length = 0
+      })
+    }
     document.head.appendChild(script)
   })
 }
