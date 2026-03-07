@@ -6,6 +6,33 @@
 
 ---
 
+## 스크린샷
+
+<table>
+  <tr>
+    <td align="center"><b>커버</b></td>
+    <td align="center"><b>로그인</b></td>
+    <td align="center"><b>홈 대시보드</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/01_cover.png" width="200"/></td>
+    <td><img src="docs/screenshots/02_login.png" width="200"/></td>
+    <td><img src="docs/screenshots/03_home.png" width="200"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>100대 명산 리스트</b></td>
+    <td align="center"><b>산 상세 / 기록</b></td>
+    <td align="center"><b>산행 달력</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/04_list.png" width="200"/></td>
+    <td><img src="docs/screenshots/05_detail.png" width="200"/></td>
+    <td><img src="docs/screenshots/06_diary.png" width="200"/></td>
+  </tr>
+</table>
+
+---
+
 ## 소개
 
 산림청, 블랙야크(BAC), 한국의산하, 월간산 — 4개 기관이 선정한 100대 명산 목록을 한 곳에서 관리합니다.
