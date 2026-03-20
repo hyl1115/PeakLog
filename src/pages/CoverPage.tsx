@@ -1,7 +1,15 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 
 export default function CoverPage() {
   const navigate = useNavigate()
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) navigate('/home', { replace: true })
+    })
+  }, [navigate])
 
   return (
     <div className="flex flex-col items-center justify-between h-screen bg-[#f0f6ff] px-6 py-12">
