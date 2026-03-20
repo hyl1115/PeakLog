@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, CheckCircle2, Circle, ArrowUpDown, ChevronRight } from 'lucide-react'
 import { useMountainStore } from '../store/mountainStore'
+import { useRecordStore } from '../store/recordStore'
 import { ORG_LIST, ORG_COLORS, type OrgFilter } from '../types'
 import BottomNav from '../components/BottomNav'
 import CompletionModal from '../components/CompletionModal'
@@ -12,6 +13,8 @@ type SortMode = 'alpha' | 'unvisited'
 export default function ListPage() {
   const navigate = useNavigate()
   const { mountains, completedIds, loading, fetchMountains, fetchCompletions, toggleCompletion } = useMountainStore()
+  const { records, fetchRecords } = useRecordStore()
+  const hikeCountMap = Object.fromEntries(records.map(r => [r.mountain_id, r.hike_count ?? 1]))
   const [activeTab, setActiveTab] = useState<OrgFilter>('전체')
   const [search, setSearch] = useState('')
   const [sortMode, setSortMode] = useState<SortMode>('alpha')
@@ -20,6 +23,7 @@ export default function ListPage() {
   useEffect(() => {
     fetchMountains()
     fetchCompletions()
+    fetchRecords()
   }, [])
 
   const handleCheckClick = (e: React.MouseEvent, mountain: Mountain) => {
@@ -144,11 +148,16 @@ export default function ListPage() {
                 </button>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-1.5">
+                  <div className="flex items-baseline gap-1.5 flex-wrap">
                     <span className={`font-semibold text-base ${done ? 'text-[#34c46a]' : 'text-[#1a3a5c]'}`}>
                       {mountain.name_ko}
                     </span>
                     <span className="text-xs text-[#b0c8de]">{mountain.height}m</span>
+                    {done && hikeCountMap[mountain.id] && (
+                      <span className="text-[10px] font-semibold text-[#e63329] bg-[#fff0ef] px-1.5 py-0.5 rounded-full">
+                        {hikeCountMap[mountain.id]}회 등반!
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-[#8aaac0] mt-0.5 truncate">{mountain.region}</p>
                   <div className="flex flex-wrap gap-1 mt-1.5">

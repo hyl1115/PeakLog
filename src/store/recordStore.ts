@@ -9,6 +9,7 @@ export interface HikingRecord {
   weather: string | null
   memo: string | null
   photo_urls: string[]
+  hike_count: number | null
   created_at: string
 }
 

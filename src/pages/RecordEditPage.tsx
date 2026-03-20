@@ -24,6 +24,7 @@ export default function RecordEditPage() {
   const [weather, setWeather] = useState('')
   const [memo, setMemo] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
+  const [hikeCount, setHikeCount] = useState(1)
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [initialized, setInitialized] = useState(false)
@@ -43,6 +44,7 @@ export default function RecordEditPage() {
       setWeather(existingRecord.weather ?? '')
       setMemo(existingRecord.memo ?? '')
       setPhotos(existingRecord.photo_urls ?? [])
+      setHikeCount(existingRecord.hike_count ?? 1)
       setInitialized(true)
     }
   }, [existingRecord, initialized])
@@ -86,6 +88,7 @@ export default function RecordEditPage() {
       weather: weather || null,
       memo: memo.trim() || null,
       photo_urls: photos,
+      hike_count: hikeCount,
     }
     if (existingRecord) {
       await updateRecord(existingRecord.id, data)
@@ -136,6 +139,26 @@ export default function RecordEditPage() {
             max={new Date().toISOString().split('T')[0]}
             className="w-full text-sm text-[#1a3a5c] outline-none bg-transparent"
           />
+        </div>
+
+        {/* 등반 횟수 */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-xs font-semibold text-[#5a7a9a] mb-3">등반 횟수</p>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setHikeCount(c => Math.max(1, c - 1))}
+              className="w-9 h-9 rounded-full bg-[#f0f6ff] text-[#1a3a5c] text-lg font-bold flex items-center justify-center active:scale-90 transition-transform"
+            >
+              −
+            </button>
+            <span className="flex-1 text-center text-base font-semibold text-[#1a3a5c]">{hikeCount}회</span>
+            <button
+              onClick={() => setHikeCount(c => c + 1)}
+              className="w-9 h-9 rounded-full bg-[#f0f6ff] text-[#1a3a5c] text-lg font-bold flex items-center justify-center active:scale-90 transition-transform"
+            >
+              +
+            </button>
+          </div>
         </div>
 
         {/* 날씨 */}
