@@ -153,7 +153,7 @@ export default function ListPage() {
                       {mountain.name_ko}
                     </span>
                     <span className="text-xs text-[#b0c8de]">{mountain.height}m</span>
-                    {done && hikeCountMap[mountain.id] && (
+                    {done && hikeCountMap[mountain.id] >= 2 && (
                       <span className="text-[10px] font-semibold text-[#e63329] bg-[#fff0ef] px-1.5 py-0.5 rounded-full">
                         {hikeCountMap[mountain.id]}회 등반!
                       </span>
