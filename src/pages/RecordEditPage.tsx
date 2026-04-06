@@ -64,10 +64,13 @@ export default function RecordEditPage() {
       const ext = file.name.split('.').pop()
       const path = `${user.id}/${mountainId}/${Date.now()}.${ext}`
       const { error } = await supabase.storage
-        .from('record-photos')
+        .from('record-photo')
         .upload(path, file, { upsert: true })
-      if (!error) {
-        const { data: urlData } = supabase.storage.from('record-photos').getPublicUrl(path)
+      if (error) {
+        console.error('사진 업로드 실패:', error.message)
+        alert(`사진 업로드에 실패했어요: ${error.message}`)
+      } else {
+        const { data: urlData } = supabase.storage.from('record-photo').getPublicUrl(path)
         uploaded.push(urlData.publicUrl)
       }
     }
