@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Mountain } from 'lucide-react'
 import { useRecordStore } from '../store/recordStore'
 import { useMountainStore } from '../store/mountainStore'
 import BottomNav from '../components/BottomNav'
+import PhotoViewer from '../components/PhotoViewer'
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -14,6 +15,8 @@ export default function DiaryPage() {
   const today = new Date()
   const [year, setYear] = useState(today.getFullYear())
   const [month, setMonth] = useState(today.getMonth())
+  const [selectedDay, setSelectedDay] = useState<number | null>(null)
+  const [viewerPhotos, setViewerPhotos] = useState<{ photos: string[], index: number } | null>(null)
 
   useEffect(() => {
     fetchRecords()
@@ -23,11 +26,13 @@ export default function DiaryPage() {
   const prevMonth = () => {
     if (month === 0) { setYear(y => y - 1); setMonth(11) }
     else setMonth(m => m - 1)
+    setSelectedDay(null)
   }
 
   const nextMonth = () => {
     if (month === 11) { setYear(y => y + 1); setMonth(0) }
     else setMonth(m => m + 1)
+    setSelectedDay(null)
   }
 
   // Build calendar grid
@@ -98,19 +103,28 @@ export default function DiaryPage() {
             {cells.map((day, i) => {
               const isHiked = day !== null && hikedDays.has(day)
               const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
+              const isSelected = day !== null && day === selectedDay
               return (
-                <div key={i} className="flex flex-col items-center py-1">
+                <div
+                  key={i}
+                  className={`flex flex-col items-center py-1 ${isHiked ? 'cursor-pointer active:opacity-70' : ''}`}
+                  onClick={() => {
+                    if (isHiked) setSelectedDay(day === selectedDay ? null : day)
+                  }}
+                >
                   {day !== null && (
                     <>
-                      <span className={`text-xs w-7 h-7 flex items-center justify-center rounded-full
-                        ${isToday
-                          ? 'bg-[#1a3a5c] text-white'
-                          : isHiked
-                            ? 'text-[#1a3a5c] font-bold'
-                            : 'text-[#8aaac0]'}`}>
+                      <span className={`text-xs w-7 h-7 flex items-center justify-center rounded-full transition-colors
+                        ${isSelected
+                          ? 'bg-[#34c46a] text-white font-bold'
+                          : isToday
+                            ? 'bg-[#1a3a5c] text-white'
+                            : isHiked
+                              ? 'text-[#1a3a5c] font-bold'
+                              : 'text-[#8aaac0]'}`}>
                         {day}
                       </span>
-                      {isHiked && <div className="w-1.5 h-1.5 rounded-full bg-[#34c46a] mt-0.5" />}
+                      {isHiked && !isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#34c46a] mt-0.5" />}
                     </>
                   )}
                 </div>
@@ -125,10 +139,9 @@ export default function DiaryPage() {
           )}
         </div>
 
-        {/* 전체 기록 리스트 */}
+        {/* 기록 리스트 */}
         <div className="bg-white rounded-2xl p-4 shadow-sm">
           {(() => {
-            const total = recordsWithMountain.length + completionOnlyEntries.length
             const allEntries = [
               ...recordsWithMountain.map(e => ({
                 key: e.record.id,
@@ -154,11 +167,32 @@ export default function DiaryPage() {
               })),
             ].sort((a, b) => b.date.localeCompare(a.date))
 
+            const selectedDateStr = selectedDay
+              ? `${monthStr}-${String(selectedDay).padStart(2, '0')}`
+              : null
+            const filtered = selectedDateStr
+              ? allEntries.filter(e => e.date === selectedDateStr)
+              : allEntries
+            const total = filtered.length
+
             return (
               <>
-                <p className="text-sm font-semibold text-[#1a3a5c] mb-3">
-                  전체 기록 <span className="text-[#b0c8de] font-normal text-xs ml-1">{total}개</span>
-                </p>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-[#1a3a5c]">
+                    {selectedDay
+                      ? `${month + 1}월 ${selectedDay}일 기록`
+                      : '전체 기록'}
+                    <span className="text-[#b0c8de] font-normal text-xs ml-1">{total}개</span>
+                  </p>
+                  {selectedDay && (
+                    <button
+                      onClick={() => setSelectedDay(null)}
+                      className="text-xs text-[#5a7a9a] active:opacity-70"
+                    >
+                      전체 보기
+                    </button>
+                  )}
+                </div>
                 {total === 0 ? (
                   <div className="flex flex-col items-center py-8 gap-2">
                     <p className="text-sm text-[#b0c8de]">아직 기록이 없어요</p>
@@ -166,7 +200,7 @@ export default function DiaryPage() {
                   </div>
                 ) : (
                   <div className="flex flex-col divide-y divide-[#f0f6ff]">
-                    {allEntries.map(entry => (
+                    {filtered.map(entry => (
                       <div
                         key={entry.key}
                         onClick={() => navigate(`/mountain/${entry.mountainId}`)}
@@ -195,8 +229,14 @@ export default function DiaryPage() {
                               )}
                               {entry.photoUrls?.length > 0 && (
                                 <div className="flex gap-1 mt-2">
-                                  {entry.photoUrls.slice(0, 3).map(url => (
-                                    <img key={url} src={url} alt="" className="w-14 h-14 rounded-lg object-cover" />
+                                  {entry.photoUrls.slice(0, 3).map((url, i) => (
+                                    <img
+                                      key={url}
+                                      src={url}
+                                      alt=""
+                                      className="w-14 h-14 rounded-lg object-cover cursor-pointer active:opacity-80 transition-opacity"
+                                      onClick={(e) => { e.stopPropagation(); setViewerPhotos({ photos: entry.photoUrls, index: i }) }}
+                                    />
                                   ))}
                                 </div>
                               )}
@@ -212,6 +252,14 @@ export default function DiaryPage() {
           })()}
         </div>
       </div>
+
+      {viewerPhotos && (
+        <PhotoViewer
+          photos={viewerPhotos.photos}
+          initialIndex={viewerPhotos.index}
+          onClose={() => setViewerPhotos(null)}
+        />
+      )}
 
       <BottomNav />
     </div>

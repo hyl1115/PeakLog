@@ -5,6 +5,7 @@ import { useMountainStore } from '../store/mountainStore'
 import { useRecordStore } from '../store/recordStore'
 import { ORG_COLORS } from '../types'
 import CompletionModal from '../components/CompletionModal'
+import PhotoViewer from '../components/PhotoViewer'
 
 export default function MountainDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -12,6 +13,7 @@ export default function MountainDetailPage() {
   const { mountains, completedIds, completionRecords, fetchMountains, fetchCompletions, toggleCompletion } = useMountainStore()
   const { records, fetchRecords } = useRecordStore()
   const [showModal, setShowModal] = useState(false)
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null)
 
   useEffect(() => {
     if (mountains.length === 0) {
@@ -162,8 +164,14 @@ export default function MountainDetailPage() {
               )}
               {hikingRecord.photo_urls?.length > 0 && (
                 <div className="flex gap-2 mt-2 flex-wrap">
-                  {hikingRecord.photo_urls.map(url => (
-                    <img key={url} src={url} alt="" className="w-24 h-24 rounded-xl object-cover" />
+                  {hikingRecord.photo_urls.map((url, i) => (
+                    <img
+                      key={url}
+                      src={url}
+                      alt=""
+                      className="w-24 h-24 rounded-xl object-cover cursor-pointer active:opacity-80 transition-opacity"
+                      onClick={() => setViewerIndex(i)}
+                    />
                   ))}
                 </div>
               )}
@@ -197,6 +205,14 @@ export default function MountainDetailPage() {
           </div>
         </div>
       </div>
+
+      {viewerIndex !== null && hikingRecord?.photo_urls && (
+        <PhotoViewer
+          photos={hikingRecord.photo_urls}
+          initialIndex={viewerIndex}
+          onClose={() => setViewerIndex(null)}
+        />
+      )}
 
       {showModal && (
         <CompletionModal
