@@ -17,6 +17,8 @@ export default function MapPage() {
   const { mountains, completedIds, fetchMountains, fetchCompletions } = useMountainStore()
   const [selected, setSelected] = useState<Mountain | null>(null)
   const [locating, setLocating] = useState(false)
+  const [showDone, setShowDone] = useState(false)
+  const [showUndone, setShowUndone] = useState(true)
 
   const handleLocate = () => {
     if (!mapInstanceRef.current || locating) return
@@ -70,6 +72,8 @@ export default function MapPage() {
     mountains.forEach(mountain => {
       if (!mountain.lat || !mountain.lng) return
       const done = completedIds.has(mountain.id)
+      if (done && !showDone) return
+      if (!done && !showUndone) return
 
       const el = document.createElement('div')
       if (done) {
@@ -107,19 +111,31 @@ export default function MapPage() {
 
       markersRef.current.push(marker)
     })
-  }, [mountains, completedIds])
+  }, [mountains, completedIds, showDone, showUndone])
 
   const done = selected ? completedIds.has(selected.id) : false
   const completedCount = completedIds.size
 
   return (
     <div className="relative flex flex-col h-screen">
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full px-4 py-1.5 shadow-md flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-[#34c46a]" />
-        <span className="text-xs font-medium text-[#1a3a5c]">완등 {completedCount}</span>
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full px-1 py-1 shadow-md flex items-center gap-0.5">
+        <button
+          onClick={() => setShowDone(v => !v)}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors
+            ${showDone ? 'bg-[#34c46a] text-white' : 'text-[#b0c8de]'}`}
+        >
+          <div className={`w-2 h-2 rounded-full ${showDone ? 'bg-white' : 'bg-[#d0e0ef]'}`} />
+          완등 {completedCount}
+        </button>
         <div className="w-px h-3 bg-[#e8f0f8]" />
-        <div className="w-2 h-2 rounded-full border-2 border-[#1a3a5c] bg-transparent" />
-        <span className="text-xs font-medium text-[#1a3a5c]">미완등 {mountains.length - completedCount}</span>
+        <button
+          onClick={() => setShowUndone(v => !v)}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors
+            ${showUndone ? 'bg-[#5a7a9a] text-white' : 'text-[#b0c8de]'}`}
+        >
+          <div className={`w-2 h-2 rounded-full border-[1.5px] ${showUndone ? 'border-white' : 'border-[#d0e0ef]'}`} />
+          미완등 {mountains.length - completedCount}
+        </button>
       </div>
 
       <div ref={mapRef} className="flex-1" />
