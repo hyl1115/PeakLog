@@ -29,6 +29,16 @@
     <td><img src="docs/screenshots/05_detail.png" width="200"/></td>
     <td><img src="docs/screenshots/06_diary.png" width="200"/></td>
   </tr>
+  <tr>
+    <td align="center"><b>지도</b></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/07_map.png" width="200"/></td>
+    <td></td>
+    <td></td>
+  </tr>
 </table>
 
 ---
@@ -48,8 +58,9 @@
 | 리스트 | 기관별 필터, 검색, 가나다순/미완등 먼저 정렬 |
 | 대시보드 | 전체 및 기관별 진행률, 최근 완등 목록 |
 | 산행 기록 | 날짜·날씨·동행인·메모·사진(최대 3장) 기록 |
-| 달력 | 월별 산행 기록 캘린더 뷰 |
-| 지도 | 카카오맵 기반 149개 산 위치 마커 |
+| 달력 | 월별 산행 기록 캘린더 뷰, 날짜 클릭 시 해당 기록 필터링 |
+| 지도 | Mapbox 기반 149개 산 위치 마커 (완등 깃발/미완등 점), GPS 내 위치 이동 |
+| 사진 뷰어 | 사진 클릭 시 전체 화면 확대, 좌우 넘기기 지원 |
 
 ---
 
@@ -59,7 +70,7 @@
 - **Styling** : Tailwind CSS v4
 - **State** : Zustand
 - **Backend** : Supabase (Auth + PostgreSQL + Storage)
-- **Map** : Kakao Maps JavaScript API
+- **Map** : Mapbox GL JS v3
 - **Deploy** : Vercel
 
 ---
@@ -85,7 +96,7 @@ npm install
 # 환경변수 설정 (.env 파일 생성)
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_KAKAO_MAP_KEY=your_kakao_javascript_key
+VITE_MAPBOX_TOKEN=your_mapbox_public_token
 
 # 개발 서버 실행
 npm run dev
