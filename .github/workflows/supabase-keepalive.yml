@@ -25,8 +25,7 @@ jobs:
         run: |
           response=$(curl -s -w "\n---HTTP_STATUS:%{http_code}" \
             "${{ secrets.SUPABASE_URL }}/rest/v1/mountains?select=id&limit=1" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}")
           body=$(echo "$response" | sed '$d')
           status=$(echo "$response" | tail -n1 | sed 's/---HTTP_STATUS://')
           echo "HTTP status: $status"
