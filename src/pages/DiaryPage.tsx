@@ -35,7 +35,6 @@ export default function DiaryPage() {
     setSelectedDay(null)
   }
 
-  // Build calendar grid
   const firstDay = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const cells: (number | null)[] = [
@@ -46,7 +45,6 @@ export default function DiaryPage() {
 
   const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`
 
-  // 달력 점 표시: records + completions 날짜 합산
   const recordDays = records
     .filter(r => r.hiked_date?.startsWith(monthStr))
     .map(r => parseInt(r.hiked_date!.split('-')[2]))
@@ -60,7 +58,6 @@ export default function DiaryPage() {
     ...completionRecords.filter(r => r.hiked_date?.startsWith(monthStr)).map(r => r.mountain_id),
   ]).size
 
-  // 리스트: 기록 있으면 기록 우선, 없으면 completion 날짜로 표시
   const recordMountainIds = new Set(records.filter(r => r.hiked_date).map(r => r.mountain_id))
   const completionOnlyEntries = completionRecords
     .filter(r => r.hiked_date && !recordMountainIds.has(r.mountain_id))
@@ -73,29 +70,29 @@ export default function DiaryPage() {
     .filter(r => r.mountain)
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f0f6ff]">
-      <div className="bg-white px-4 pt-12 pb-4 shadow-sm">
-        <h1 className="text-xl text-[#1a3a5c]" style={{ fontFamily: 'Jua, sans-serif' }}>
+    <div className="flex flex-col min-h-screen bg-paper">
+      <div className="bg-surface px-4 pt-12 pb-4 shadow-card">
+        <h1 className="text-xl font-bold text-ink">
           산행 기록
         </h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 pb-24 flex flex-col gap-4">
-        {/* 달력 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
+      <div className="flex-1 overflow-y-auto px-4 py-4 pb-24 flex flex-col gap-5">
+        {/* 달력 — 카드 유지 */}
+        <div className="bg-surface rounded-card p-4 shadow-card">
           <div className="flex items-center justify-between mb-4">
-            <button onClick={prevMonth} className="p-1 text-[#5a7a9a] active:scale-90 transition-transform">
+            <button onClick={prevMonth} className="p-1 text-ink-2 transition-opacity active:opacity-60">
               <ChevronLeft size={20} />
             </button>
-            <span className="text-sm font-semibold text-[#1a3a5c]">{year}년 {month + 1}월</span>
-            <button onClick={nextMonth} className="p-1 text-[#5a7a9a] active:scale-90 transition-transform">
+            <span className="text-sm font-semibold text-ink">{year}년 {month + 1}월</span>
+            <button onClick={nextMonth} className="p-1 text-ink-2 transition-opacity active:opacity-60">
               <ChevronRight size={20} />
             </button>
           </div>
 
           <div className="grid grid-cols-7 mb-1">
             {DAYS.map(d => (
-              <div key={d} className="text-center text-[10px] text-[#b0c8de] py-1">{d}</div>
+              <div key={d} className="text-center text-[10px] text-faint py-1">{d}</div>
             ))}
           </div>
 
@@ -107,7 +104,7 @@ export default function DiaryPage() {
               return (
                 <div
                   key={i}
-                  className={`flex flex-col items-center py-1 ${isHiked ? 'cursor-pointer active:opacity-70' : ''}`}
+                  className={`flex flex-col items-center py-1 ${isHiked ? 'cursor-pointer' : ''}`}
                   onClick={() => {
                     if (isHiked) setSelectedDay(day === selectedDay ? null : day)
                   }}
@@ -116,15 +113,15 @@ export default function DiaryPage() {
                     <>
                       <span className={`text-xs w-7 h-7 flex items-center justify-center rounded-full transition-colors
                         ${isSelected
-                          ? 'bg-[#34c46a] text-white font-bold'
+                          ? 'bg-success text-white font-bold'
                           : isToday
-                            ? 'bg-[#1a3a5c] text-white'
+                            ? 'bg-ink text-white'
                             : isHiked
-                              ? 'text-[#1a3a5c] font-bold'
-                              : 'text-[#8aaac0]'}`}>
+                              ? 'text-ink font-bold'
+                              : 'text-muted'}`}>
                         {day}
                       </span>
-                      {isHiked && !isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#34c46a] mt-0.5" />}
+                      {isHiked && !isSelected && <div className="w-1.5 h-1.5 rounded-full bg-success mt-0.5" />}
                     </>
                   )}
                 </div>
@@ -133,14 +130,14 @@ export default function DiaryPage() {
           </div>
 
           {monthHikedCount > 0 && (
-            <p className="text-xs text-center text-[#8aaac0] mt-3 pt-3 border-t border-[#f0f6ff]">
-              이번 달 <span className="text-[#34c46a] font-semibold">{monthHikedCount}개</span> 산 올랐어요!
+            <p className="text-xs text-center text-muted mt-3 pt-3 border-t border-paper">
+              이번 달 <span className="text-success font-semibold">{monthHikedCount}개</span> 산 올랐어요!
             </p>
           )}
         </div>
 
-        {/* 기록 리스트 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
+        {/* 기록 리스트 — 카드 해체, 배경에 직접 */}
+        <div>
           {(() => {
             const allEntries = [
               ...recordsWithMountain.map(e => ({
@@ -178,16 +175,16 @@ export default function DiaryPage() {
             return (
               <>
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-sm font-semibold text-[#1a3a5c]">
+                  <p className="text-sm font-semibold text-ink">
                     {selectedDay
                       ? `${month + 1}월 ${selectedDay}일 기록`
                       : '전체 기록'}
-                    <span className="text-[#b0c8de] font-normal text-xs ml-1">{total}개</span>
+                    <span className="text-faint font-normal text-xs ml-1">{total}개</span>
                   </p>
                   {selectedDay && (
                     <button
                       onClick={() => setSelectedDay(null)}
-                      className="text-xs text-[#5a7a9a] active:opacity-70"
+                      className="text-xs text-ink-2 transition-opacity active:opacity-60"
                     >
                       전체 보기
                     </button>
@@ -195,37 +192,37 @@ export default function DiaryPage() {
                 </div>
                 {total === 0 ? (
                   <div className="flex flex-col items-center py-8 gap-2">
-                    <p className="text-sm text-[#b0c8de]">아직 기록이 없어요</p>
-                    <p className="text-xs text-[#dce8f5]">산 상세 페이지에서 기록을 남겨보세요</p>
+                    <p className="text-sm text-faint">아직 기록이 없어요</p>
+                    <p className="text-xs text-rule">산 상세 페이지에서 기록을 남겨보세요</p>
                   </div>
                 ) : (
-                  <div className="flex flex-col divide-y divide-[#f0f6ff]">
+                  <div className="flex flex-col gap-2">
                     {filtered.map(entry => (
                       <div
                         key={entry.key}
                         onClick={() => navigate(`/mountain/${entry.mountainId}`)}
-                        className="flex items-start gap-3 py-3 cursor-pointer active:opacity-70"
+                        className="flex items-start gap-3 py-3 px-3 rounded-card bg-surface shadow-card cursor-pointer transition-colors active:bg-sunken"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-[#f0faf4] flex items-center justify-center shrink-0">
-                          <Mountain size={18} className="text-[#34c46a]" strokeWidth={1.5} />
+                        <div className="w-10 h-10 rounded-field bg-success-soft flex items-center justify-center shrink-0">
+                          <Mountain size={18} className="text-success" strokeWidth={1.5} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-baseline justify-between gap-2">
-                            <p className="text-sm font-semibold text-[#1a3a5c] truncate">{entry.name}</p>
-                            <span className="text-xs text-[#b0c8de] shrink-0">
+                            <p className="text-sm font-semibold text-ink truncate">{entry.name}</p>
+                            <span className="text-xs text-faint shrink-0">
                               {new Date(entry.date + 'T00:00:00').toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                             </span>
                           </div>
                           {entry.isCompletionOnly ? (
-                            <p className="text-xs text-[#dce8f5] mt-0.5">상세 기록을 남겨보세요</p>
+                            <p className="text-xs text-rule mt-0.5">상세 기록을 남겨보세요</p>
                           ) : (
                             <>
                               <div className="flex items-center gap-2 mt-0.5">
-                                {entry.weather && <span className="text-xs text-[#8aaac0]">{entry.weather}</span>}
-                                {entry.companions && <span className="text-xs text-[#8aaac0]">· 👥 {entry.companions}</span>}
+                                {entry.weather && <span className="text-xs text-muted">{entry.weather}</span>}
+                                {entry.companions && <span className="text-xs text-muted">· 👥 {entry.companions}</span>}
                               </div>
                               {entry.memo && (
-                                <p className="text-xs text-[#b0c8de] mt-1 line-clamp-2">{entry.memo}</p>
+                                <p className="text-xs text-faint mt-1 line-clamp-2">{entry.memo}</p>
                               )}
                               {entry.photoUrls?.length > 0 && (
                                 <div className="flex gap-1 mt-2">
@@ -234,7 +231,7 @@ export default function DiaryPage() {
                                       key={url}
                                       src={url}
                                       alt=""
-                                      className="w-14 h-14 rounded-lg object-cover cursor-pointer active:opacity-80 transition-opacity"
+                                      className="w-14 h-14 rounded-field object-cover cursor-pointer transition-opacity active:opacity-80"
                                       onClick={(e) => { e.stopPropagation(); setViewerPhotos({ photos: entry.photoUrls, index: i }) }}
                                     />
                                   ))}
