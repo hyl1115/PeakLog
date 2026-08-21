@@ -13,18 +13,22 @@ export default function BottomNav() {
   const { pathname } = useLocation()
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#e8f0f8] flex">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-surface border-t border-rule flex pb-safe">
       {tabs.map(({ path, label, icon: Icon }) => {
         const active = pathname === path
         return (
           <button
             key={path}
             onClick={() => navigate(path)}
-            className={`flex-1 flex flex-col items-center py-3 gap-0.5 transition-colors
-              ${active ? 'text-[#e63329]' : 'text-[#b0c8de]'}`}
+            className="flex-1 flex flex-col items-center py-3 gap-0.5 transition-colors"
           >
-            <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
-            <span className="text-[10px] font-medium">{label}</span>
+            <Icon size={22} strokeWidth={active ? 2.4 : 1.6}
+              className={active ? 'text-ink' : 'text-faint'} />
+            <span className={`text-[10px] transition-colors
+              ${active ? 'text-ink font-semibold' : 'text-faint font-medium'}`}>
+              {label}
+            </span>
+            {active && <div className="w-1 h-1 rounded-full bg-brand mt-0.5" />}
           </button>
         )
       })}

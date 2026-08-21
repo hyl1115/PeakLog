@@ -110,21 +110,22 @@ export default function RecordEditPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f0f6ff]">
-      <div className="relative bg-white px-4 pt-12 pb-4 shadow-sm">
+    <div className="flex flex-col min-h-screen bg-paper">
+      {/* 헤더 */}
+      <div className="relative bg-surface px-4 pt-12 pb-4 shadow-card">
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-12 left-4 p-1 text-[#5a7a9a] active:scale-90 transition-transform"
+          className="absolute top-12 left-4 p-1 text-ink-2 transition-opacity active:opacity-60"
         >
           <ChevronLeft size={26} />
         </button>
-        <h1 className="text-center text-base font-semibold text-[#1a3a5c] pt-1">
+        <h1 className="text-center text-base font-semibold text-ink pt-1">
           {mountain?.name_ko ?? ''} 기록
         </h1>
         {existingRecord && (
           <button
             onClick={handleDelete}
-            className="absolute top-12 right-4 p-1 text-[#e63329] active:scale-90 transition-transform"
+            className="absolute top-12 right-4 p-1 text-muted transition-opacity active:opacity-60"
           >
             <Trash2 size={20} />
           </button>
@@ -133,31 +134,31 @@ export default function RecordEditPage() {
 
       <div className="flex flex-col gap-4 px-4 py-5 pb-10">
         {/* 날짜 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-[#5a7a9a] mb-2">날짜</p>
+        <div className="bg-surface rounded-card p-4 shadow-card">
+          <p className="text-xs font-semibold text-ink-2 mb-2">날짜</p>
           <input
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
             max={new Date().toISOString().split('T')[0]}
-            className="w-full text-sm text-[#1a3a5c] outline-none bg-transparent"
+            className="w-full text-sm text-ink outline-none bg-transparent"
           />
         </div>
 
         {/* 등반 횟수 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-[#5a7a9a] mb-3">등반 횟수</p>
+        <div className="bg-surface rounded-card p-4 shadow-card">
+          <p className="text-xs font-semibold text-ink-2 mb-3">등반 횟수</p>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setHikeCount(c => Math.max(1, c - 1))}
-              className="w-9 h-9 rounded-full bg-[#f0f6ff] text-[#1a3a5c] text-lg font-bold flex items-center justify-center active:scale-90 transition-transform"
+              className="w-9 h-9 rounded-full bg-paper text-ink text-lg font-bold flex items-center justify-center transition-opacity active:opacity-60"
             >
               −
             </button>
-            <span className="flex-1 text-center text-base font-semibold text-[#1a3a5c]">{hikeCount}회</span>
+            <span className="flex-1 text-center text-base font-semibold text-ink">{hikeCount}회</span>
             <button
               onClick={() => setHikeCount(c => c + 1)}
-              className="w-9 h-9 rounded-full bg-[#f0f6ff] text-[#1a3a5c] text-lg font-bold flex items-center justify-center active:scale-90 transition-transform"
+              className="w-9 h-9 rounded-full bg-paper text-ink text-lg font-bold flex items-center justify-center transition-opacity active:opacity-60"
             >
               +
             </button>
@@ -165,17 +166,17 @@ export default function RecordEditPage() {
         </div>
 
         {/* 날씨 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-[#5a7a9a] mb-3">날씨</p>
+        <div className="bg-surface rounded-card p-4 shadow-card">
+          <p className="text-xs font-semibold text-ink-2 mb-3">날씨</p>
           <div className="flex gap-2">
             {WEATHER_OPTIONS.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => setWeather(weather === opt.value ? '' : opt.value)}
-                className={`flex-1 h-11 rounded-xl text-xl flex items-center justify-center transition-all
+                className={`flex-1 h-11 rounded-field text-xl flex items-center justify-center transition-all
                   ${weather === opt.value
-                    ? 'bg-[#e8f0f8] shadow-sm scale-105'
-                    : 'bg-[#f8fbff]'}`}
+                    ? 'bg-sunken shadow-card ring-1 ring-brand/30'
+                    : 'bg-surface'}`}
               >
                 {opt.emoji}
               </button>
@@ -184,52 +185,52 @@ export default function RecordEditPage() {
         </div>
 
         {/* 동행인 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-[#5a7a9a] mb-2">동행인</p>
+        <div className="bg-surface rounded-card p-4 shadow-card">
+          <p className="text-xs font-semibold text-ink-2 mb-2">동행인</p>
           <input
             type="text"
             value={companions}
             onChange={e => setCompanions(e.target.value)}
             placeholder="함께한 사람을 입력하세요"
-            className="w-full text-sm text-[#1a3a5c] placeholder-[#d0e0ef] outline-none bg-transparent"
+            className="w-full text-sm text-ink placeholder-faint outline-none bg-transparent"
           />
         </div>
 
         {/* 메모 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-[#5a7a9a] mb-2">메모</p>
+        <div className="bg-surface rounded-card p-4 shadow-card">
+          <p className="text-xs font-semibold text-ink-2 mb-2">메모</p>
           <textarea
             value={memo}
             onChange={e => setMemo(e.target.value)}
             placeholder="산행 소감을 자유롭게 적어보세요"
             rows={4}
-            className="w-full text-sm text-[#1a3a5c] placeholder-[#d0e0ef] outline-none bg-transparent resize-none"
+            className="w-full text-sm text-ink placeholder-faint outline-none bg-transparent resize-none"
           />
         </div>
 
         {/* 사진 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-[#5a7a9a] mb-3">
-            사진 <span className="text-[#b0c8de] font-normal">({photos.length}/3)</span>
+        <div className="bg-surface rounded-card p-4 shadow-card">
+          <p className="text-xs font-semibold text-ink-2 mb-3">
+            사진 <span className="text-faint font-normal">({photos.length}/3)</span>
           </p>
           <div className="flex gap-2 flex-wrap">
             {photos.map(url => (
               <div key={url} className="relative w-24 h-24">
-                <img src={url} alt="" className="w-24 h-24 rounded-xl object-cover" />
+                <img src={url} alt="" className="w-24 h-24 rounded-field object-cover" />
                 <button
                   onClick={() => removePhoto(url)}
-                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#e63329] rounded-full flex items-center justify-center"
+                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-ink rounded-full flex items-center justify-center"
                 >
                   <X size={12} color="white" />
                 </button>
               </div>
             ))}
             {photos.length < 3 && (
-              <label className={`w-24 h-24 rounded-xl border-2 border-dashed border-[#dce8f5]
+              <label className={`w-24 h-24 rounded-field border-2 border-dashed border-rule
                 flex flex-col items-center justify-center gap-1 cursor-pointer
-                ${uploading ? 'opacity-50' : 'active:scale-95 transition-transform'}`}>
-                <Camera size={20} className="text-[#b0c8de]" />
-                <span className="text-[10px] text-[#b0c8de]">{uploading ? '업로드 중' : '추가'}</span>
+                ${uploading ? 'opacity-50' : 'transition-opacity active:opacity-70'}`}>
+                <Camera size={20} className="text-faint" />
+                <span className="text-[10px] text-faint">{uploading ? '업로드 중' : '추가'}</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -246,8 +247,7 @@ export default function RecordEditPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-4 bg-[#e63329] text-white text-base rounded-2xl shadow-md active:scale-95 transition-transform disabled:opacity-60"
-          style={{ fontFamily: 'Jua, sans-serif' }}
+          className="w-full py-4 bg-accent text-ink text-base font-semibold rounded-card shadow-card active:scale-[0.97] transition-transform disabled:opacity-60"
         >
           {saving ? '저장 중...' : '저장하기'}
         </button>

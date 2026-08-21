@@ -1,3 +1,6 @@
+/* PeakLog · Soft Mint design system
+ * anchor hue: mint-green 160 · CTA: cream 95
+ */
 @import "tailwindcss";
 
 @font-face {
@@ -46,19 +49,75 @@
   src: url('/fonts/Pretendard-Black.subset.woff2') format('woff2');
 }
 
+/* ─────────────────────────────────────────────────────────────
+ * Design tokens — Soft Mint palette
+ * OKLCH, mint-green anchor (hue 160), cream CTA (hue 95)
+ * Pretendard unified — no display font
+ * ───────────────────────────────────────────────────────────── */
 @theme {
+  /* Type — Pretendard only, weight hierarchy for emphasis */
   --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Surfaces — cool mint tint */
+  --color-paper:          oklch(96.5% 0.015 160); /* #eef5f2 app background */
+  --color-surface:        oklch(98.5% 0.006 160); /* #f7faf8 cards */
+  --color-sunken:         oklch(94%   0.018 160); /* #e0ece6 inset fields */
+
+  /* Ink ramp — forest green hue */
+  --color-ink:            oklch(33%   0.045 160); /* #2d4a3e primary text + hero bg */
+  --color-ink-2:          oklch(48%   0.040 160); /* #4a6e5f secondary text */
+  --color-muted:          oklch(62%   0.035 160); /* #6e9484 tertiary */
+  --color-faint:          oklch(76%   0.028 160); /* #a0c4b0 placeholder */
+  --color-rule:           oklch(88%   0.018 160); /* #cdddd4 borders */
+  --color-brand:          oklch(62%   0.080 160); /* #5a9a7a links / progress / nav dots */
+
+  /* CTA — cream. Buttons and checkboxes only. */
+  --color-accent:         oklch(97%   0.040 95);  /* #FFFDD0 cream CTA */
+  --color-accent-soft:    oklch(98%   0.020 95);  /* cream tint bg */
+
+  /* Success — completed peaks */
+  --color-success:        oklch(68%   0.150 155); /* #3aaa6e done */
+  --color-success-soft:   oklch(96%   0.020 155); /* #e6f5ec done tint bg */
+
+  /* Radius scale */
+  --radius-field:  0.75rem;
+  --radius-card:   1rem;
+  --radius-sheet:  1.5rem;
+
+  /* Elevation — mint-tinted shadows */
+  --shadow-card: 0 1px 2px oklch(33% 0.045 160 / 0.04), 0 4px 12px oklch(33% 0.045 160 / 0.06);
+  --shadow-pop:  0 4px 12px oklch(33% 0.045 160 / 0.10), 0 12px 32px oklch(33% 0.045 160 / 0.12);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 html, body {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
 }
 
+/* Grounded float — used on the cover character.
+ * Collapses under prefers-reduced-motion. */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-14px); }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 3.6s var(--ease-in-out) infinite;
 }
 
-.animate-float {
-  animation: float 3.2s ease-in-out infinite;
+/* Safe-area bottom padding for bottom nav */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+  }
 }

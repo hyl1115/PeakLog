@@ -68,7 +68,7 @@ export default function MapPage() {
     markersRef.current.forEach(m => m.remove())
     markersRef.current = []
 
-    // 산 마커 추가
+    // 산 마커 추가 (DOM 조작이라 토큰 대신 hex 유지)
     mountains.forEach(mountain => {
       if (!mountain.lat || !mountain.lng) return
       const done = completedIds.has(mountain.id)
@@ -118,59 +118,62 @@ export default function MapPage() {
 
   return (
     <div className="relative flex flex-col h-screen">
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full px-1 py-1 shadow-md flex items-center gap-0.5">
+      {/* 필터 바 */}
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-10 bg-surface/90 backdrop-blur-sm rounded-full px-1 py-1 shadow-pop flex items-center gap-0.5">
         <button
           onClick={() => setShowDone(v => !v)}
           className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors
-            ${showDone ? 'bg-[#34c46a] text-white' : 'text-[#b0c8de]'}`}
+            ${showDone ? 'bg-success text-white' : 'text-faint'}`}
         >
-          <div className={`w-2 h-2 rounded-full ${showDone ? 'bg-white' : 'bg-[#d0e0ef]'}`} />
+          <div className={`w-2 h-2 rounded-full ${showDone ? 'bg-white' : 'bg-rule'}`} />
           완등 {completedCount}
         </button>
-        <div className="w-px h-3 bg-[#e8f0f8]" />
+        <div className="w-px h-3 bg-rule" />
         <button
           onClick={() => setShowUndone(v => !v)}
           className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors
-            ${showUndone ? 'bg-[#5a7a9a] text-white' : 'text-[#b0c8de]'}`}
+            ${showUndone ? 'bg-ink-2 text-white' : 'text-faint'}`}
         >
-          <div className={`w-2 h-2 rounded-full border-[1.5px] ${showUndone ? 'border-white' : 'border-[#d0e0ef]'}`} />
+          <div className={`w-2 h-2 rounded-full border-[1.5px] ${showUndone ? 'border-white' : 'border-rule'}`} />
           미완등 {mountains.length - completedCount}
         </button>
       </div>
 
       <div ref={mapRef} className="flex-1" />
 
+      {/* GPS 버튼 */}
       <button
         onClick={handleLocate}
         disabled={locating}
-        className="absolute bottom-20 right-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform disabled:opacity-50"
+        className="absolute bottom-20 right-4 z-10 w-10 h-10 bg-surface rounded-full shadow-pop flex items-center justify-center transition-opacity active:opacity-70 disabled:opacity-50"
       >
-        <LocateFixed size={20} className={locating ? 'text-[#34c46a] animate-pulse' : 'text-[#1a3a5c]'} />
+        <LocateFixed size={20} className={locating ? 'text-success animate-pulse' : 'text-ink'} />
       </button>
 
+      {/* 선택된 산 카드 */}
       {selected && (
         <div className="absolute bottom-16 left-0 right-0 px-4 z-10 max-w-[430px] mx-auto">
-          <div className="bg-white rounded-2xl px-4 py-3.5 shadow-xl flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0
-              ${done ? 'bg-[#f0faf4]' : 'bg-[#f0f6ff]'}`}>
-              <MountainIcon size={20} className={done ? 'text-[#34c46a]' : 'text-[#5a7a9a]'} strokeWidth={1.5} />
+          <div className="bg-surface rounded-card px-4 py-3.5 shadow-pop flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-field flex items-center justify-center shrink-0
+              ${done ? 'bg-success-soft' : 'bg-paper'}`}>
+              <MountainIcon size={20} className={done ? 'text-success' : 'text-ink-2'} strokeWidth={1.5} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5">
-                <p className="text-sm font-semibold text-[#1a3a5c] truncate">{selected.name_ko}</p>
-                {done && <CheckCircle2 size={14} fill="#34c46a" color="white" className="shrink-0" />}
+                <p className="text-sm font-semibold text-ink truncate">{selected.name_ko}</p>
+                {done && <CheckCircle2 size={14} fill="var(--color-success)" color="white" className="shrink-0" />}
               </div>
-              <p className="text-xs text-[#8aaac0]">{selected.height}m · {selected.region}</p>
+              <p className="text-xs text-muted">{selected.height}m · {selected.region}</p>
             </div>
             <button
               onClick={() => navigate(`/mountain/${selected.id}`)}
-              className="p-1.5 text-[#5a7a9a] active:scale-90 transition-transform"
+              className="p-1.5 text-ink-2 transition-opacity active:opacity-60"
             >
               <ChevronRight size={20} />
             </button>
             <button
               onClick={() => setSelected(null)}
-              className="p-1.5 text-[#b0c8de] active:scale-90 transition-transform"
+              className="p-1.5 text-faint transition-opacity active:opacity-60"
             >
               <X size={16} />
             </button>
