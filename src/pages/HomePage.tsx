@@ -62,13 +62,13 @@ export default function HomePage() {
       <div className="flex flex-col gap-6 px-4 py-5 pb-24">
         {/* 전체 진행률 히어로 */}
         <div className="bg-ink rounded-sheet p-5 text-white shadow-pop">
-          <p className="text-xs text-brand mb-1">전체 완등 현황</p>
+          <p className="text-xs text-[#a8d4be] mb-1">전체 완등 현황</p>
           <div className="flex items-end justify-between mb-3">
             <div>
               <span className="text-4xl font-extrabold">{totalCompleted}</span>
-              <span className="text-lg text-brand"> / {totalUnique}</span>
+              <span className="text-lg text-white/55"> / {totalUnique}</span>
             </div>
-            <span className="text-3xl font-extrabold text-brand">{totalPercent}%</span>
+            <span className="text-3xl font-extrabold text-[#a8d4be]">{totalPercent}%</span>
           </div>
           <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
             <div
@@ -76,7 +76,7 @@ export default function HomePage() {
               style={{ width: `${totalPercent}%` }}
             />
           </div>
-          <p className="text-xs text-brand mt-2">
+          <p className="text-xs text-white/60 mt-2">
             {totalUnique - totalCompleted}개 남았어요!
           </p>
         </div>

@@ -63,7 +63,7 @@ export default function MountainDetailPage() {
         <div className="flex items-start gap-4">
           {/* 아이콘 — 좌측 배치, 작게 */}
           <div className={`w-14 h-14 rounded-card flex items-center justify-center shrink-0 shadow-card
-            ${done ? 'bg-success' : 'bg-ink'}`}>
+            ${done ? 'bg-brand' : 'bg-ink'}`}>
             <Mountain size={28} color="white" strokeWidth={1.5} />
           </div>
 
@@ -98,7 +98,7 @@ export default function MountainDetailPage() {
         <button
           onClick={handleCheckClick}
           className={`w-full py-4 rounded-card flex flex-col items-center justify-center gap-1 shadow-card active:scale-[0.97] transition-all
-            ${done ? 'bg-success' : 'bg-surface border-2 border-dashed border-rule'}`}
+            ${done ? 'bg-brand' : 'bg-surface border-2 border-dashed border-rule'}`}
         >
           {done ? (
             <>
