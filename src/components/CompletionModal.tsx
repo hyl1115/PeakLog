@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X, Calendar } from 'lucide-react'
+import { X, Calendar, Check } from 'lucide-react'
 
 interface Props {
   mountainName: string
@@ -47,12 +47,18 @@ export default function CompletionModal({ mountainName, onConfirm, onClose }: Pr
         </div>
 
         <div className="flex flex-col gap-2">
-          <button
-            onClick={() => onConfirm(date || null)}
-            className="w-full py-4 bg-accent text-ink text-base font-semibold rounded-card shadow-card active:scale-[0.97] transition-transform"
-          >
-            저장하기
-          </button>
+          <div className="border-2 border-ink/12 rounded-full p-1.5">
+            <button
+              onClick={() => onConfirm(date || null)}
+              className="w-full flex items-center justify-between bg-accent rounded-full pl-8 pr-1.5 py-1.5
+                         transition-transform duration-150 ease-out active:scale-[0.97]"
+            >
+              <span className="flex-1 text-center text-ink text-base font-bold">저장하기</span>
+              <span className="w-11 h-11 bg-brand rounded-full flex items-center justify-center shrink-0">
+                <Check size={18} className="text-white" strokeWidth={2.5} />
+              </span>
+            </button>
+          </div>
           <button
             onClick={() => onConfirm(null)}
             className="w-full py-3.5 bg-paper text-muted text-sm rounded-card transition-opacity active:opacity-70"

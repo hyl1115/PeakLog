@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ArrowUpRight } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 const SAVED_EMAIL_KEY = 'peaklog_saved_email'
@@ -90,13 +91,21 @@ export default function LoginPage() {
           <p className="text-xs text-red-400 text-center">{error}</p>
         )}
 
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className="w-full py-4 bg-accent text-ink text-lg font-semibold rounded-card shadow-card active:scale-[0.97] transition-transform disabled:opacity-60 mt-2"
-        >
-          {loading ? '로그인 중...' : '로그인'}
-        </button>
+        <div className="border-2 border-ink/12 rounded-full p-1.5 mt-2">
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="w-full flex items-center justify-between bg-accent rounded-full pl-8 pr-1.5 py-1.5
+                       transition-transform duration-150 ease-out active:scale-[0.97] disabled:opacity-60"
+          >
+            <span className="flex-1 text-center text-ink text-lg font-bold">{loading ? '로그인 중...' : '로그인'}</span>
+            {!loading && (
+              <span className="w-11 h-11 bg-brand rounded-full flex items-center justify-center shrink-0">
+                <ArrowUpRight size={18} className="text-white" strokeWidth={2.5} />
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
       <button

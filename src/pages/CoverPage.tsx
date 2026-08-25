@@ -80,17 +80,18 @@ export default function CoverPage() {
         </svg>
       </div>
 
-      {/* CTA — B 레이아웃: 아우트라인 pill + 내부 필 버튼 */}
+      {/* CTA — B 레이아웃: 텍스트/아이콘 분리형 pill */}
       <footer className="relative z-20 px-7 pb-12 pt-4 shrink-0">
         <div className="border-2 border-ink/12 rounded-full p-1.5">
           <button
             onClick={() => navigate('/login')}
-            className="w-full py-4 px-6 bg-accent text-ink text-lg font-bold rounded-full shadow-pop
-                       flex items-center justify-center gap-2
+            className="w-full flex items-center justify-between bg-accent rounded-full pl-8 pr-1.5 py-1.5
                        transition-transform duration-150 ease-out active:scale-[0.97]"
           >
-            시작하기
-            <ArrowUpRight size={20} strokeWidth={2.5} />
+            <span className="flex-1 text-center text-ink text-lg font-bold">시작하기</span>
+            <span className="w-11 h-11 bg-brand rounded-full flex items-center justify-center shrink-0">
+              <ArrowUpRight size={18} className="text-white" strokeWidth={2.5} />
+            </span>
           </button>
         </div>
         <p className="text-xs text-muted text-center mt-3">
