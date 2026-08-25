@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ChevronLeft, Trash2, Camera, X } from 'lucide-react'
+import { ChevronLeft, Trash2, Camera, X, Check } from 'lucide-react'
 import { useMountainStore } from '../store/mountainStore'
 import { useRecordStore } from '../store/recordStore'
 import { supabase } from '../lib/supabase'
@@ -244,13 +244,21 @@ export default function RecordEditPage() {
           </div>
         </div>
 
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="w-full py-4 bg-accent text-ink text-base font-semibold rounded-card shadow-card active:scale-[0.97] transition-transform disabled:opacity-60"
-        >
-          {saving ? '저장 중...' : '저장하기'}
-        </button>
+        <div className="border-2 border-ink/12 rounded-full p-1.5">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="w-full flex items-center justify-between bg-accent rounded-full pl-8 pr-1.5 py-1.5
+                       transition-transform duration-150 ease-out active:scale-[0.97] disabled:opacity-60"
+          >
+            <span className="flex-1 text-center text-ink text-base font-bold">{saving ? '저장 중...' : '저장하기'}</span>
+            {!saving && (
+              <span className="w-11 h-11 bg-brand rounded-full flex items-center justify-center shrink-0">
+                <Check size={18} className="text-white" strokeWidth={2.5} />
+              </span>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   )
