@@ -1,11 +1,11 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Home, List, Map, TrendingUp } from 'lucide-react'
+import { Home, List, Map, BookOpen } from 'lucide-react'
 
 const tabs = [
-  { path: '/home',    label: '홈',      icon: Home },
-  { path: '/list',    label: '리스트',   icon: List },
-  { path: '/ascent',  label: '나의 등반', icon: TrendingUp },
-  { path: '/map',     label: '지도',     icon: Map },
+  { path: '/home',  label: '홈',   icon: Home },
+  { path: '/list',  label: '리스트', icon: List },
+  { path: '/map',   label: '지도',  icon: Map },
+  { path: '/diary', label: '기록',  icon: BookOpen },
 ]
 
 export default function BottomNav() {
