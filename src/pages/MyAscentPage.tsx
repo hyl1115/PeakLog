@@ -7,7 +7,7 @@ const EVEREST_HEIGHT = 8_849
 
 export default function MyAscentPage() {
   const navigate = useNavigate()
-  const { mountains, completedIds, completionRecords, fetchMountains, fetchCompletions } =
+  const { mountains, completionRecords, fetchMountains, fetchCompletions } =
     useMountainStore()
 
   useEffect(() => {
@@ -39,7 +39,6 @@ export default function MyAscentPage() {
   const remaining = totalMountains - totalCount
 
   // 마일스톤 (25% 단위)
-  const milestoneAlt = Math.ceil(totalPossible * 0.25)
   const nextMilestonePercent =
     percent < 25 ? 25 : percent < 50 ? 50 : percent < 75 ? 75 : 100
   const nextMilestoneAlt = Math.ceil(totalPossible * (nextMilestonePercent / 100))
