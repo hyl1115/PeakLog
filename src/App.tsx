@@ -7,6 +7,7 @@ import MountainDetailPage from './pages/MountainDetailPage'
 import RecordEditPage from './pages/RecordEditPage'
 import DiaryPage from './pages/DiaryPage'
 import MapPage from './pages/MapPage'
+import MyAscentPage from './pages/MyAscentPage'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/record/:mountainId" element={<RecordEditPage />} />
           <Route path="/diary" element={<DiaryPage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/ascent" element={<MyAscentPage />} />
         </Routes>
       </div>
     </BrowserRouter>
